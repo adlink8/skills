@@ -42,6 +42,12 @@ These skills help you think through problems before writing code.
   npx skills@latest add mattpocock/skills/request-refactor-plan
   ```
 
+- **manage-project** — Generic project management workflow: keep requirements/status/todos, prioritize next steps, and safely sync AUTOGEN sections.
+
+  ```
+  npx skills@latest add adlink8/skills/manage-project
+  ```
+
 ## Development
 
 These skills help you write, refactor, and fix code.
