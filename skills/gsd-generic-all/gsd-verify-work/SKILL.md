@@ -23,6 +23,9 @@ Output: {phase_num}-UAT.md tracking all test results. If issues found: diagnosed
 <execution_context>
 @.planning/workflows/verify-work.md
 @.planning/templates/UAT.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/documentation-sync-rules.md
+@.planning/references/doc-authority-order.md
 </execution_context>
 
 <context>
@@ -31,11 +34,20 @@ Phase: $ARGUMENTS (optional)
 - If not provided: Check for active sessions or prompt for phase
 
 Context files are resolved inside the workflow (`init verify-work`) and delegated via `<files_to_read>` blocks.
+
+**Documentation sync verification:**
+When a feature passes UAT, verify whether related module README files, `.planning/STATE.md`, phase summaries, and testing docs reflect the verified behavior. If not, create or update documentation-sync gaps rather than silently completing the phase.
 </context>
 
 <process>
 Execute the verify-work workflow from @.planning/workflows/verify-work.md end-to-end.
 Preserve all workflow gates (session management, test presentation, diagnosis, fix planning, routing).
+
+Add documentation checks to UAT output:
+- related module README updated or unchanged with justification
+- `.planning/STATE.md` / phase summary updated when project state changed
+- test commands and verification evidence recorded
+- unresolved documentation drift recorded in `.planning/docs-audit/`
 </process>
 
 ---
