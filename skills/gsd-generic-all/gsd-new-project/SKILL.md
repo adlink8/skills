@@ -29,6 +29,8 @@ Initialize a new project through unified flow: questioning → research (optiona
 - `.planning/REQUIREMENTS.md` — scoped requirements
 - `.planning/ROADMAP.md` — phase structure
 - `.planning/STATE.md` — project memory
+- `.planning/references/` — agent documentation protocol references when available
+- `.planning/templates/` — module/documentation templates when available
 
 **After this command:** Run `/gsd-plan-phase 1` to start execution.
 </objective>
@@ -37,13 +39,25 @@ Initialize a new project through unified flow: questioning → research (optiona
 @.planning/workflows/new-project.md
 @.planning/references/questioning.md
 @.planning/references/ui-brand.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/doc-authority-order.md
+@.planning/references/module-readme-protocol.md
+@.planning/references/project-reading-order.md
 @.planning/templates/project.md
 @.planning/templates/requirements.md
+@.planning/templates/module-readme-template.md
+@.planning/templates/project-doc-map-template.md
 </execution_context>
 
 <process>
 Execute the new-project workflow from @.planning/workflows/new-project.md end-to-end.
 Preserve all workflow gates (validation, approvals, commits, routing).
+
+When initializing project documentation, seed or preserve the agent documentation architecture:
+- keep `.planning/` as the GSD control layer
+- keep module README files as local module boundaries
+- use code/tests as implementation and verification truth
+- avoid duplicating volatile task state in root README
 </process>
 
 ---
