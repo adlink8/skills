@@ -19,6 +19,9 @@ Use when you know what you want but don't know which `/gsd-*` command to run.
 <execution_context>
 @.planning/workflows/do.md
 @.planning/references/ui-brand.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/project-reading-order.md
+@.planning/references/doc-authority-order.md
 </execution_context>
 
 <context>
@@ -27,6 +30,14 @@ $ARGUMENTS
 
 <process>
 Execute the do workflow from @.planning/workflows/do.md end-to-end.
+
+Before routing, classify the request:
+- project-level: roadmap, phase planning, milestone status, release readiness, architecture, cross-module integration, verification, review
+- module-level: focused bug/feature/test/doc request inside a subsystem
+
+Use @.planning/references/project-reading-order.md to decide which documents the target command should read.
+Use @.planning/references/doc-authority-order.md when the user request depends on project state or completion claims.
+
 Route user intent to the best GSD command and invoke it.
 </process>
 
