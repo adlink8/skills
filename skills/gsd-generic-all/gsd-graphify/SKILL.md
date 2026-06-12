@@ -151,7 +151,13 @@ gsd-tools-gen path: gsd-tools-gen
 
 ## Instructions
 
-1. **Invoke graphify:**
+1. **Read documentation architecture when present:**
+   - .planning/references/agent-doc-architecture.md
+   - .planning/references/module-readme-protocol.md
+   - .planning/intel/doc-map.json
+   - .planning/intel/module-boundaries.json
+
+2. **Invoke graphify:**
    Run from the project root:
    ```
    graphify . --update
@@ -159,13 +165,28 @@ gsd-tools-gen path: gsd-tools-gen
    This builds the knowledge graph with SHA256 incremental caching.
    Timeout: up to 5 minutes (or as configured via graphify.build_timeout).
 
-2. **Validate output:**
+3. **Ensure documentation nodes are represented when supported by graphify output or post-processing:**
+   Include or preserve nodes/edges for:
+   - Document
+   - Module
+   - SourceFile
+   - TestFile
+   - APIEndpoint
+   - Requirement
+   - Phase
+   - Task
+   - Decision
+   - Risk
+   - Verification
+   Module README files should connect to owned modules, source files, tests, APIs, and related phase tasks where inferable.
+
+4. **Validate output:**
    Check that graphify-out/graph.json exists and is valid JSON with nodes[] and edges[] arrays.
    If graphify exited non-zero or graph.json is not parseable, output:
    ## GRAPHIFY BUILD FAILED
    Include the stderr output for debugging. Do NOT delete .planning/graphs/ -- prior valid graph remains available.
 
-3. **Copy artifacts to .planning/graphs/:**
+5. **Copy artifacts to .planning/graphs/:**
    ```
    cp graphify-out/graph.json .planning/graphs/graph.json
    cp graphify-out/graph.html .planning/graphs/graph.html
@@ -173,13 +194,13 @@ gsd-tools-gen path: gsd-tools-gen
    ```
    These three files are the build output consumed by query, status, and diff commands.
 
-4. **Write diff snapshot:**
+6. **Write diff snapshot:**
    ```
    node \"gsd-tools-gen\" graphify build snapshot
    ```
    This creates .planning/graphs/.last-build-snapshot.json for future diff comparisons.
 
-5. **Report build summary:**
+7. **Report build summary:**
    ```
    node \"gsd-tools-gen\" graphify status
    ```
@@ -200,6 +221,7 @@ Wait for the agent to complete.
 2. DO NOT modify graph files directly -- the build agent handles writes
 3. DO NOT skip the config gate check
 4. DO NOT use gsd-tools-gen config get-value for the config gate -- it exits on missing keys
+5. DO NOT exclude module README or documentation nodes when the project uses layered documentation
 
 ---
 
