@@ -140,13 +140,29 @@ Task(
 Project root: ${CWD}
 Prefer: gsd-sdk-gen query <subcommand> (installed gsd-sdk-gen on PATH). Legacy: gsd-tools-gen
 
+Read if present:
+- .planning/references/agent-doc-architecture.md
+- .planning/references/doc-authority-order.md
+- .planning/references/module-readme-protocol.md
+- .planning/codebase/*.md
+- module README files discovered under the project
+
 Instructions:
-1. Analyze the codebase structure, dependencies, APIs, and architecture
-2. Write JSON intel files to .planning/intel/ (stack.json, api-map.json, dependency-graph.json, file-roles.json, arch-decisions.json)
-3. Each file must have a _meta object with updated_at timestamp
-4. Use `gsd-sdk-gen query intel.extract-exports <file>` to analyze source files
-5. Use `gsd-sdk-gen query intel.patch-meta <file>` to update timestamps after writing
-6. Use `gsd-sdk-gen query intel.validate` to check your output
+1. Analyze the codebase structure, dependencies, APIs, architecture, and documentation layers
+2. Write JSON intel files to .planning/intel/:
+   - stack.json
+   - api-map.json
+   - dependency-graph.json
+   - file-roles.json
+   - arch-decisions.json
+   - doc-map.json
+   - module-boundaries.json
+3. doc-map.json should map root README, .planning files, codebase docs, module README files, tests, and human docs
+4. module-boundaries.json should capture each module's owns / does_not_own / readme / main_files / tests where inferable
+5. Each file must have a _meta object with updated_at timestamp
+6. Use `gsd-sdk-gen query intel.extract-exports <file>` to analyze source files when useful
+7. Use `gsd-sdk-gen query intel.patch-meta <file>` to update timestamps after writing
+8. Use `gsd-sdk-gen query intel.validate` to check your output
 
 When complete, output: ## INTEL UPDATE COMPLETE
 If something fails, output: ## INTEL UPDATE FAILED with details."
@@ -169,6 +185,7 @@ Display a summary showing:
 - Which intel files were written or updated
 - Last update timestamps
 - Overall health of the intel index
+- Whether doc-map.json and module-boundaries.json were created
 
 ---
 
@@ -178,6 +195,7 @@ Display a summary showing:
 2. DO NOT modify intel files directly -- the agent handles writes during refresh
 3. DO NOT skip the config gate check
 4. DO NOT use the gsd-tools-gen config get-value CLI for the config gate -- it exits on missing keys
+5. DO NOT treat README claims as implementation truth when code/tests disagree
 
 ---
 
