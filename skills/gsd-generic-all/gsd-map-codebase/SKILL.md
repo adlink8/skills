@@ -17,11 +17,15 @@ Analyze existing codebase using parallel gsd-codebase-mapper agents to produce s
 
 Each mapper agent explores a focus area and **writes documents directly** to `.planning/codebase/`. The orchestrator only receives confirmations, keeping context usage minimal.
 
-Output: .planning/codebase/ folder with 7 structured documents about the codebase state.
+Output: `.planning/codebase/` folder with structured documents about the codebase state, plus documentation coverage/drift notes when module README files exist.
 </objective>
 
 <execution_context>
 @.planning/workflows/map-codebase.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/module-readme-protocol.md
+@.planning/references/doc-authority-order.md
+@.planning/templates/doc-audit-report-template.md
 </execution_context>
 
 <context>
@@ -34,6 +38,9 @@ Check for .planning/STATE.md - loads context if project already initialized
 - Before /gsd-new-project (brownfield codebases) - creates codebase map first
 - After /gsd-new-project (greenfield codebases) - updates codebase map as code evolves
 - Anytime to refresh codebase understanding
+
+**Documentation architecture extension:**
+When module README files exist, mappers should compare them to code/tests and record coverage/drift findings. Documentation claims never override code/tests.
 </context>
 
 <when_to_use>
@@ -43,6 +50,7 @@ Check for .planning/STATE.md - loads context if project already initialized
 - Onboarding to an unfamiliar codebase
 - Before major refactoring (understand current state)
 - When STATE.md references outdated codebase info
+- When module README files may be stale after implementation waves
 
 **Skip map-codebase for:**
 - Greenfield projects with no code yet (nothing to map)
@@ -56,18 +64,22 @@ Check for .planning/STATE.md - loads context if project already initialized
    - Agent 1: tech focus → writes STACK.md, INTEGRATIONS.md
    - Agent 2: arch focus → writes ARCHITECTURE.md, STRUCTURE.md
    - Agent 3: quality focus → writes CONVENTIONS.md, TESTING.md
-   - Agent 4: concerns focus → writes CONCERNS.md
-4. Wait for agents to complete, collect confirmations (NOT document contents)
-5. Verify all 7 documents exist with line counts
-6. Commit codebase map
-7. Offer next steps (typically: /gsd-new-project or /gsd-plan-phase)
+   - Agent 4: concerns/docs focus → writes CONCERNS.md, DOC-COVERAGE.md, README-DRIFT.md
+4. Ask mappers to use @.planning/references/module-readme-protocol.md when assessing module README files
+5. Wait for agents to complete, collect confirmations (NOT document contents)
+6. Verify core 7 documents exist with line counts
+7. If module README files exist, verify DOC-COVERAGE.md and README-DRIFT.md exist or explicitly state "no module README files found"
+8. Commit codebase map
+9. Offer next steps (typically: /gsd-new-project, /gsd-plan-phase, or /gsd-docs-audit)
 </process>
 
 <success_criteria>
 - [ ] .planning/codebase/ directory created
-- [ ] All 7 codebase documents written by mapper agents
+- [ ] All 7 core codebase documents written by mapper agents
 - [ ] Documents follow template structure
 - [ ] Parallel agents completed without errors
+- [ ] DOC-COVERAGE.md records module README coverage when applicable
+- [ ] README-DRIFT.md records stale/conflicting module documentation when applicable
 - [ ] User knows next steps
 </success_criteria>
 
