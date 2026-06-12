@@ -21,6 +21,9 @@ planning via /gsd-plan-phase --reviews.
 
 <execution_context>
 @.planning/workflows/review.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/doc-authority-order.md
+@.planning/references/documentation-sync-rules.md
 </execution_context>
 
 <context>
@@ -34,10 +37,20 @@ Phase number: extracted from $ARGUMENTS (required)
 - `--qwen` — Include Qwen Code review (Alibaba Qwen models)
 - `--cursor` — Include Cursor agent review
 - `--all` — Include all available CLIs
+
+**Documentation architecture review criteria:**
+Ask reviewers to check whether the plan:
+- respects the documentation authority order
+- reads project-level vs module-level documents correctly
+- identifies owning modules and module README inputs
+- includes verification before completion
+- updates module README / `.planning/STATE.md` / summaries when behavior changes
+- avoids creating duplicate or conflicting state documents
 </context>
 
 <process>
 Execute the review workflow from @.planning/workflows/review.md end-to-end.
+Include documentation architecture criteria in the generated review prompt.
 </process>
 
 ---
