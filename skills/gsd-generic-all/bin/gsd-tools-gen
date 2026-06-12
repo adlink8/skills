@@ -1,0 +1,3 @@
+#!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec node "$(cygpath -w "$SCRIPT_DIR/gsd-tools-gen.js")" "$@"

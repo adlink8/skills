@@ -1,0 +1,85 @@
+---
+name: gsd:discuss-phase
+description: [通用版] "Gather phase context through adaptive questioning before planning. Use --all to skip area selection and discuss all gray areas interactively. Use --auto to skip interactive questions (Codex picks recommended defaults). Use --chain for interactive discuss followed by automatic plan+execute. Use --power for bulk question generation into a file-based UI (answer at your own pace)."
+argument-hint: "<phase> [--all] [--auto] [--chain] [--batch] [--analyze] [--text] [--power]"
+allowed-tools:
+  - Read
+  - Write
+  - Bash
+  - Glob
+  - Grep
+  - AskUserQuestion
+  - Task
+  - mcp__context7__resolve-library-id
+  - mcp__context7__query-docs
+---
+
+
+<objective>
+Extract implementation decisions that downstream agents need — researcher and planner will use CONTEXT.md to know what to investigate and what choices are locked.
+
+**How it works:**
+1. Load prior context (PROJECT.md, REQUIREMENTS.md, STATE.md, prior CONTEXT.md files)
+2. Scout codebase for reusable assets and patterns
+3. Analyze phase — skip gray areas already decided in prior phases
+4. Present remaining gray areas — user selects which to discuss
+5. Deep-dive each selected area until satisfied
+6. Create CONTEXT.md with decisions that guide research and planning
+
+**Output:** `{phase_num}-CONTEXT.md` — decisions clear enough that downstream agents can act without asking the user again
+</objective>
+
+<execution_context>
+@.planning/workflows/discuss-phase.md
+@.planning/workflows/discuss-phase-assumptions.md
+@.planning/workflows/discuss-phase-power.md
+@.planning/templates/context.md
+</execution_context>
+
+<runtime_note>
+**Copilot (VS Code):** Use `vscode_askquestions` wherever this workflow calls `AskUserQuestion`. They are equivalent — `vscode_askquestions` is the VS Code Copilot implementation of the same interactive question API.
+</runtime_note>
+
+<context>
+Phase number: $ARGUMENTS (required)
+
+Context files are resolved in-workflow using `init phase-op` and roadmap/state tool calls.
+</context>
+
+<process>
+**Mode routing:**
+```bash
+DISCUSS_MODE=$(gsd-sdk-gen query config-get workflow.discuss_mode 2>/dev/null || echo "discuss")
+```
+
+If `DISCUSS_MODE` is `"assumptions"`: Read and execute @.planning/workflows/discuss-phase-assumptions.md end-to-end.
+
+If `DISCUSS_MODE` is `"discuss"` (or unset, or any other value): Read and execute @.planning/workflows/discuss-phase.md end-to-end.
+
+**MANDATORY:** The execution_context files listed above ARE the instructions. Read the workflow file BEFORE taking any action. The objective and success_criteria sections in this command file are summaries — the workflow file contains the complete step-by-step process with all required behaviors, config checks, and interaction patterns. Do not improvise from the summary.
+</process>
+
+<success_criteria>
+- Prior context loaded and applied (no re-asking decided questions)
+- Gray areas identified through intelligent analysis
+- User chose which areas to discuss
+- Each selected area explored until satisfied
+- Scope creep redirected to deferred ideas
+- CONTEXT.md captures decisions, not vague vision
+- User knows next steps
+</success_criteria>
+
+---
+
+<generic_adapter>
+This is a GENERIC version of the GSD skill. It works with any AI runtime
+(WorkBuddy, Codex, Claude Code, Cursor, Aider, etc.).
+
+To use this skill with the generic GSD SDK:
+  1. Ensure the generic `gsd-sdk-gen` and `gsd-tools-gen` are on your PATH:
+     export PATH="$PATH:/path/to/gsd-generic-all/bin"
+  2. The SDK will auto-detect the .planning/ directory in your project root.
+  3. All `gsd-sdk-gen query` and `gsd-tools-gen.cjs` calls in this skill work unchanged.
+
+Original Codex-specific paths have been replaced with relative .planning/ paths.
+</generic_adapter>
