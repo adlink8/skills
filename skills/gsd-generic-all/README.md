@@ -10,8 +10,8 @@
 - 无法在其他 AI 工具（WorkBuddy、Claude Code、Cursor、Aider）上运行
 
 **通用版解决方案：**
-1. 提供通用版 `gsd-sdk` 和 `gsd-tools` CLI（纯 Node.js，只操作 `.planning/` 目录）
-2. 87 个技能保留原始 `gsd-sdk query` / `gsd-tools` 调用不变
+1. 提供通用版 `gsd-sdk-gen` 和 `gsd-tools-gen` CLI（纯 Node.js，只操作 `.planning/` 目录）
+2. 87 个技能中的 `gsd-sdk query` / `gsd-tools` 调用已替换为 `gsd-sdk-gen query` / `gsd-tools-gen`
 3. 只替换 `$HOME/.Codex` 硬编码路径为相对路径
 4. 新增 Agent Documentation Architecture，让 GSD 项目演进、模块 README、代码地图、结构化情报、知识图谱、代码与测试形成稳定的总分协作结构
 
@@ -35,8 +35,8 @@ $env:PATH += ";C:\path\to\gsd-generic-all\bin"
 
 ### 3. 验证安装
 ```bash
-gsd-sdk --version    # gsd-sdk-generic 1.0.0
-gsd-tools --version  # gsd-tools-generic 1.0.0
+gsd-sdk-gen --version    # gsd-sdk-generic 1.0.0
+gsd-tools-gen --version  # gsd-tools-generic 1.0.0
 ```
 
 ## 使用
@@ -134,7 +134,7 @@ gsd-docs-audit/SKILL.md
 
 ## SDK 支持的命令
 
-### gsd-sdk query
+### gsd-sdk-gen query
 - `commit <message>` — git commit
 - `resolve-model <agent>` — 解析模型配置
 - `generate-slug <text>` — 生成 URL slug
@@ -145,7 +145,7 @@ gsd-docs-audit/SKILL.md
 - `frontmatter.set <file> --field k --value v` — 修改 frontmatter
 - `<namespace>.<cmd>` — 通用命名空间命令（todos.list, roadmap.get 等）
 
-### gsd-tools
+### gsd-tools-gen
 - `graphify` — 构建 CODEBASE-INDEX.md
 - `config-set <key> <value>` — 设置 config
 
@@ -157,8 +157,8 @@ for f in gsd-generic-all/*/SKILL.md; do
   grep -q '$HOME/.Codex' "$f" && echo "FAIL: $(dirname $f)"
 done
 
-# 确认 gsd-sdk 调用已保留
-grep -c 'gsd-sdk query' gsd-generic-all/gsd-debug/SKILL.md
+# 确认 gsd-sdk-gen 调用已保留
+grep -c 'gsd-sdk-gen query' gsd-generic-all/gsd-debug/SKILL.md
 # => 4
 ```
 
@@ -167,8 +167,12 @@ grep -c 'gsd-sdk query' gsd-generic-all/gsd-debug/SKILL.md
 ```
 gsd-generic-all/
 ├── bin/
-│   ├── gsd-sdk      # 通用版 gsd-sdk CLI
-│   └── gsd-tools    # 通用版 gsd-tools CLI
+│   ├── gsd-sdk-gen      # 通用版 gsd-sdk CLI (shell wrapper)
+│   ├── gsd-sdk-gen.js   # Node.js 实现
+│   ├── gsd-sdk-gen.cmd  # CMD/PowerShell 包装器
+│   ├── gsd-tools-gen    # 通用版 gsd-tools CLI (shell wrapper)
+│   ├── gsd-tools-gen.js # Node.js 实现
+│   └── gsd-tools-gen.cmd
 ├── references/      # Agent 文档架构协议
 ├── templates/       # 模块 README / 文档审计 / 交接模板
 ├── anki/SKILL.md
@@ -190,9 +194,9 @@ gsd-generic-all/
 | 维度 | 原版 (Codex) | 通用版 |
 |------|-------------|--------|
 | 路径依赖 | `$HOME/.Codex/get-shit-done/` | 相对 `.planning/` |
-| SDK 依赖 | Codex 内置 gsd-sdk | 通用 Node.js CLI |
+| SDK 依赖 | Codex 内置 gsd-sdk | 通用 Node.js CLI (gsd-sdk-gen) |
 | 运行时 | 仅 Codex | WorkBuddy / Codex / Claude Code / Cursor / Aider |
-| 技能文件 | 原始 | 保留原始 gsd-sdk 调用，只改路径 |
+| 技能文件 | 原始 | gsd-sdk query → gsd-sdk-gen query，路径改为 .planning/ |
 | 项目文档架构 | 未统一 | GSD + 模块 README + codebase/intel/graph + docs audit |
 
 ## 许可证
