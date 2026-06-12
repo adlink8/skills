@@ -26,6 +26,10 @@ Create executable phase prompts (PLAN.md files) for a roadmap phase with integra
 <execution_context>
 @.planning/workflows/plan-phase.md
 @.planning/references/ui-brand.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/project-reading-order.md
+@.planning/references/documentation-sync-rules.md
+@.planning/references/module-readme-protocol.md
 </execution_context>
 
 <runtime_note>
@@ -45,11 +49,20 @@ Phase number: $ARGUMENTS (optional — auto-detects next unplanned phase if omit
 - `--text` — Use plain-text numbered lists instead of TUI menus (required for `/rc` remote sessions)
 
 Normalize phase input in step 2 before any directory lookups.
+
+**Documentation architecture planning rule:**
+Every PLAN.md should list the documentation inputs used and the documentation updates expected from execution. At minimum consider `.planning/STATE.md`, `.planning/ROADMAP.md`, `.planning/codebase/ARCHITECTURE.md`, `.planning/codebase/TESTING.md`, relevant `.planning/intel/*.json`, and relevant module README files.
 </context>
 
 <process>
 Execute the plan-phase workflow from @.planning/workflows/plan-phase.md end-to-end.
 Preserve all workflow gates (validation, research, planning, verification loop, routing).
+
+Apply @.planning/references/agent-doc-architecture.md while planning:
+- distinguish project-level and module-level work
+- identify owning modules for each task
+- include module README reads in task context where relevant
+- include documentation sync requirements in plans when code/module behavior may change
 </process>
 
 ---
