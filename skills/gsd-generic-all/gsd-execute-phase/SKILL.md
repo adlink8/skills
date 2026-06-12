@@ -34,6 +34,10 @@ Context budget: ~15% orchestrator, 100% fresh per subagent.
 <execution_context>
 @.planning/workflows/execute-phase.md
 @.planning/references/ui-brand.md
+@.planning/references/agent-doc-architecture.md
+@.planning/references/module-readme-protocol.md
+@.planning/references/documentation-sync-rules.md
+@.planning/references/doc-authority-order.md
 </execution_context>
 
 <runtime_note>
@@ -56,11 +60,20 @@ Phase: $ARGUMENTS
 - Do not infer that a flag is active just because it is documented in this prompt
 
 Context files are resolved inside the workflow via `gsd-sdk-gen query init.execute-phase` and per-subagent `<files_to_read>` blocks.
+
+**Documentation sync rule:**
+Before changing code, each executor must identify the owning module and read its README when present. After changing behavior, API, data flow, tests, or ownership, update the module README or record unresolved drift in `.planning/docs-audit/`.
 </context>
 
 <process>
 Execute the execute-phase workflow from @.planning/workflows/execute-phase.md end-to-end.
 Preserve all workflow gates (wave execution, checkpoint handling, verification, state updates, routing).
+
+Apply documentation architecture rules:
+- do not trust README claims over code/tests
+- run verification before marking work complete
+- update module README after verified module behavior changes
+- update `.planning/STATE.md` or phase summaries when project-level state changes
 </process>
 
 ---
